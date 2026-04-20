@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💊 Pharma Lab — Dental Rx Study</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-2: #131826;
+    --bg-3: #1a2033;
+    --bg-4: #232940;
+    --border: #2a3148;
+    --border-2: #3a4262;
+    --text: #f0f2fa;
+    --text-2: #b8c0d9;
+    --text-3: #7a8199;
+    --amber: #fbbf24;
+    --gold: #fcd34d;
+    --rose: #fb7185;
+    --coral: #ff8a7a;
+    --mint: #5eead4;
+    --sky: #7dd3fc;
+    --violet: #c4b5fd;
+    --lime: #bef264;
+    --peach: #fdba74;
+    --pink: #f9a8d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse at top left, #1a1030 0%, transparent 40%),
+      radial-gradient(ellipse at bottom right, #0a2030 0%, transparent 40%),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.55;
+    min-height: 100vh;
+    padding: 0 0 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══ HEADER ═══ */
+  header {
+    background: rgba(10, 14, 26, 0.85);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px 0;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+  .brand-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, var(--amber), var(--coral));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .brand-row h1 span.emoji { -webkit-text-fill-color: initial; }
+  .stats-mini {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--text-2);
+    align-items: center;
+  }
+  .stat-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .stat-chip b { color: var(--text); }
+  .stat-chip.streak { border-color: rgba(251, 191, 36, 0.3); color: var(--gold); }
+  .stat-chip.xp { border-color: rgba(94, 234, 212, 0.3); color: var(--mint); }
+
+  .modes {
+    display: flex;
+    gap: 2px;
+    margin-top: 16px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .modes::-webkit-scrollbar { display: none; }
+  .mode-btn {
+    background: transparent;
+    color: var(--text-3);
+    border: none;
+    padding: 12px 16px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .mode-btn:hover { color: var(--text); }
+  .mode-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
+  .mode-view { display: none; animation: fadeIn 0.25s ease-out; }
+  .mode-view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* ═══ CARDS / BUTTONS ═══ */
+  .btn {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: var(--bg-4); border-color: var(--border-2); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: var(--amber); color: #1a1000; border-color: var(--amber); }
+  .btn-primary:hover { background: var(--gold); color: #1a1000; }
+  .btn-success { background: var(--mint); color: #002a20; border-color: var(--mint); }
+  .btn-success:hover { background: #8dfce0; color: #002a20; }
+  .btn-danger { background: var(--rose); color: #2a0010; border-color: var(--rose); }
+  .btn-danger:hover { background: #fca0a9; color: #2a0010; }
+  .btn-ghost { background: transparent; }
+
+  /* ═══ BROWSE ═══ */
+  .search-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .search-box {
+    flex: 1; min-width: 220px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .search-box:focus { outline: none; border-color: var(--amber); background: var(--bg-3); }
+  .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+  .chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    color: var(--text-2);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .chip:hover { color: var(--text); border-color: var(--border-2); }
+  .chip.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .drug-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+  .drug-card {
+    background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .drug-card:hover { transform: translateY(-2px); border-color: var(--border-2); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .drug-card.hidden { display: none; }
+  .drug-card .sec-stripe {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .drug-card-head { display: flex; align-items: start; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+  .drug-emoji { font-size: 24px; line-height: 1; }
+  .drug-card h3 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; flex: 1; padding-top: 2px; }
+  .drug-sec-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; opacity: 0.8; }
+  .drug-rows { font-size: 13px; }
+  .drug-dose-row {
+    display: flex;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .drug-dose-row:last-child { border-bottom: none; }
+  .drug-dose-label {
+    color: var(--text-3);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    width: 68px;
+    flex-shrink: 0;
+  }
+  .drug-dose-val { color: var(--text); flex: 1; font-size: 12.5px; }
+  .drug-dose-val.na { color: var(--text-3); font-style: italic; }
+  .drug-max-pill {
+    display: inline-block;
+    background: rgba(251, 113, 133, 0.12);
+    color: var(--rose);
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  .drug-note {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 8px;
+    font-size: 11px;
+    color: var(--amber);
+  }
+
+  /* Section colors */
+  .sec-1 .sec-stripe { background: linear-gradient(90deg, var(--sky), var(--mint)); }
+  .sec-2 .sec-stripe { background: linear-gradient(90deg, var(--rose), var(--coral)); }
+  .sec-3 .sec-stripe { background: linear-gradient(90deg, var(--lime), var(--mint)); }
+  .sec-4 .sec-stripe { background: linear-gradient(90deg, var(--peach), var(--gold)); }
+  .sec-5 .sec-stripe { background: linear-gradient(90deg, var(--violet), var(--pink)); }
+  .sec-6 .sec-stripe { background: linear-gradient(90deg, var(--text-3), var(--text-2)); }
+  .sec-1 .drug-sec-label { color: var(--sky); }
+  .sec-2 .drug-sec-label { color: var(--rose); }
+  .sec-3 .drug-sec-label { color: var(--lime); }
+  .sec-4 .drug-sec-label { color: var(--peach); }
+  .sec-5 .drug-sec-label { color: var(--violet); }
+  .sec-6 .drug-sec-label { color: var(--text-2); }
+
+  /* ═══ FLASHCARDS ═══ */
+  .flash-container { max-width: 620px; margin: 20px auto 0; }
+  .flash-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: var(--text-2);
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .flash-progress-bar {
+    height: 6px;
+    background: var(--bg-3);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .flash-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber), var(--coral));
+    transition: width 0.3s;
+    border-radius: 999px;
+  }
+  .flashcard {
+    background: linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 44px 28px 54px;
+    min-height: 320px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  }
+  .flashcard:hover { border-color: var(--border-2); transform: translateY(-2px); }
+  .flash-sec-tag {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .flash-hint { position: absolute; bottom: 14px; right: 16px; font-size: 11px; color: var(--text-3); }
+  .flash-status {
+    position: absolute; top: 14px; right: 16px;
+    font-size: 11px; color: var(--text-3);
+    font-weight: 600;
+  }
+  .flash-front { text-align: center; }
+  .flash-front-emoji { font-size: 56px; margin-bottom: 12px; }
+  .flash-front h2 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .flash-front p { color: var(--text-3); font-size: 13px; }
+  .flash-back { display: none; }
+  .flash-back.show { display: block; }
+  .flash-front.hidden { display: none; }
+  .flash-back h3 { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
+  .flash-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .flash-row:last-child { border-bottom: none; }
+  .flash-label { width: 130px; color: var(--text-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .flash-value { flex: 1; color: var(--text); }
+  .flash-value.na { color: var(--text-3); font-style: italic; }
+  .flash-actions { margin-top: 18px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+
+  /* ═══ QUIZ ═══ */
+  .quiz-container { max-width: 660px; margin: 0 auto; }
+  .quiz-stats { display: flex; justify-content: space-between; margin-bottom: 16px; color: var(--text-2); font-size: 13px; font-weight: 600; flex-wrap: wrap; gap: 10px; }
+  .quiz-streak { color: var(--amber); display: flex; align-items: center; gap: 4px; }
+  .quiz-card {
+    background: linear-gradient(160deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .quiz-q { font-size: 18px; margin-bottom: 22px; line-height: 1.45; font-weight: 500; }
+  .quiz-q b { color: var(--amber); }
+  .quiz-q-tag {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .quiz-opt {
+    display: block;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--amber); background: var(--bg-4); transform: translateX(2px); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-opt.correct {
+    background: rgba(94, 234, 212, 0.1);
+    border-color: var(--mint);
+  }
+  .quiz-opt.correct::after { content: " ✓"; color: var(--mint); font-weight: 800; float: right; }
+  .quiz-opt.wrong { background: rgba(251, 113, 133, 0.1); border-color: var(--rose); }
+  .quiz-opt.wrong::after { content: " ✗"; color: var(--rose); font-weight: 800; float: right; }
+  .quiz-feedback {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: none;
+    line-height: 1.55;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: rgba(94, 234, 212, 0.08); border: 1px solid rgba(94, 234, 212, 0.3); color: var(--mint); }
+  .quiz-feedback.wrong-fb { background: rgba(251, 113, 133, 0.08); border: 1px solid rgba(251, 113, 133, 0.3); color: var(--rose); }
+  .quiz-next { margin-top: 20px; display: flex; justify-content: center; }
+
+  /* ═══ SPEED RUN ═══ */
+  .speed-home { text-align: center; padding: 60px 20px; max-width: 500px; margin: 0 auto; }
+  .speed-home h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
+  .speed-home p { color: var(--text-2); margin-bottom: 28px; }
+  .speed-hero-emoji { font-size: 64px; margin-bottom: 12px; }
+  .speed-best {
+    background: var(--bg-3); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px; margin: 24px auto; max-width: 300px;
+  }
+  .speed-best b { color: var(--amber); font-size: 24px; }
+  .speed-timer {
+    font-size: 48px; font-weight: 800;
+    text-align: center; margin-bottom: 20px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+  }
+  .speed-timer.warn { color: var(--rose); animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { to { opacity: 0.5; } }
+
+  /* ═══ CASES ═══ */
+  .cases-container { max-width: 720px; margin: 0 auto; }
+  .case-card {
+    background: linear-gradient(160deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .case-num {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--amber); font-weight: 700; margin-bottom: 6px;
+  }
+  .case-scenario {
+    background: rgba(251, 191, 36, 0.06);
+    border-left: 3px solid var(--amber);
+    padding: 16px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .case-scenario .patient { color: var(--gold); font-weight: 600; }
+  .case-q { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+  .case-explanation {
+    background: rgba(94, 234, 212, 0.06);
+    border-left: 3px solid var(--mint);
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: none;
+  }
+  .case-explanation.show { display: block; animation: fadeIn 0.3s; }
+  .case-explanation b { color: var(--mint); }
+
+  /* ═══ CALCULATOR ═══ */
+  .calc-container { max-width: 620px; margin: 0 auto; }
+  .calc-input-card {
+    background: linear-gradient(160deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .calc-input-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .calc-input {
+    background: var(--bg-3);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    width: 120px;
+    text-align: center;
+    font-family: inherit;
+  }
+  .calc-input:focus { outline: none; border-color: var(--amber); }
+  .calc-label { color: var(--text-2); font-weight: 600; }
+  .calc-result {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .calc-drug-name { flex: 1; font-weight: 700; font-size: 15px; }
+  .calc-dose-val {
+    font-size: 16px; font-weight: 800;
+    color: var(--mint);
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-dose-unit { font-size: 11px; color: var(--text-3); text-align: right; }
+  .calc-warn { color: var(--rose); font-size: 11px; margin-top: 4px; }
+
+  /* ═══ MNEMONICS ═══ */
+  .mnem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+  .mnem-card {
+    background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mnem-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--amber), var(--coral));
+  }
+  .mnem-hero { font-size: 36px; margin-bottom: 8px; line-height: 1; }
+  .mnem-title { font-weight: 700; font-size: 16px; margin-bottom: 12px; }
+  .mnem-phrase {
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px dashed rgba(251, 191, 36, 0.3);
+    color: var(--gold);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-style: italic;
+    text-align: center;
+  }
+  .mnem-body { color: var(--text-2); font-size: 13px; line-height: 1.65; }
+  .mnem-body ul { margin: 8px 0 0 16px; }
+  .mnem-body li { margin-bottom: 6px; }
+  .mnem-body strong { color: var(--text); }
+  .mnem-body em { color: var(--sky); font-style: normal; font-weight: 600; }
+
+  /* ═══ EXAM TRAPS ═══ */
+  .trap-card {
+    background: linear-gradient(145deg, rgba(251, 113, 133, 0.06), rgba(251, 113, 133, 0.02));
+    border: 1px solid rgba(251, 113, 133, 0.25);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 10px;
+  }
+  .trap-title { font-weight: 700; color: var(--coral); margin-bottom: 6px; font-size: 14px; }
+  .trap-body { color: var(--text-2); font-size: 13px; line-height: 1.55; }
+  .trap-body strong { color: var(--gold); }
+
+  /* ═══ ABBREVS ═══ */
+  .abbrev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .abbrev-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    border-radius: 12px;
+    transition: all 0.15s;
+  }
+  .abbrev-card:hover { border-color: var(--amber); transform: translateY(-1px); }
+  .abbrev-term { font-weight: 800; font-size: 18px; color: var(--amber); margin-bottom: 2px; }
+  .abbrev-def { color: var(--text-2); font-size: 12.5px; }
+
+  /* ═══ PROGRESS ═══ */
+  .progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .progress-stat {
+    background: linear-gradient(145deg, var(--bg-2), var(--bg-3));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .progress-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-3); font-weight: 700; margin-bottom: 6px; }
+  .progress-stat-val { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .progress-stat-sub { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+  .mastery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .mastery-cell {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .mastery-cell.known { border-color: rgba(94, 234, 212, 0.4); background: rgba(94, 234, 212, 0.06); }
+  .mastery-cell.review { border-color: rgba(251, 113, 133, 0.4); background: rgba(251, 113, 133, 0.06); }
+  .mastery-cell-name { font-weight: 600; }
+  .mastery-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-3); flex-shrink: 0; }
+  .mastery-cell.known .mastery-dot { background: var(--mint); }
+  .mastery-cell.review .mastery-dot { background: var(--rose); }
+
+  /* Section color tags */
+  .tag-sec-1 { background: rgba(125, 211, 252, 0.15); color: var(--sky); }
+  .tag-sec-2 { background: rgba(251, 113, 133, 0.15); color: var(--rose); }
+  .tag-sec-3 { background: rgba(190, 242, 100, 0.15); color: var(--lime); }
+  .tag-sec-4 { background: rgba(253, 186, 116, 0.15); color: var(--peach); }
+  .tag-sec-5 { background: rgba(196, 181, 253, 0.15); color: var(--violet); }
+  .tag-sec-6 { background: rgba(184, 192, 217, 0.15); color: var(--text-2); }
+
+  h2.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+  }
+  .section-intro { color: var(--text-2); font-size: 13.5px; margin-bottom: 20px; line-height: 1.6; }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.3s ease-out; }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    width: 10px; height: 14px;
+    z-index: 9999;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand-row">
+      <h1><span class="emoji">💊</span> Pharma Lab <span style="font-size:10px;color:var(--text-3);font-weight:500;-webkit-text-fill-color:var(--text-3);background-clip:unset">v3</span></h1>
+      <div class="stats-mini">
+        <div class="stat-chip streak" title="Daily streak">🔥 <b id="hdr-streak">0</b></div>
+        <div class="stat-chip xp" title="XP earned">⭐ <b id="hdr-xp">0</b> XP</div>
+        <div class="stat-chip" title="Drugs mastered">✓ <b id="hdr-mastered">0</b>/37</div>
+      </div>
+    </div>
+    <div class="modes" id="modes">
+      <button class="mode-btn active" data-mode="browse">📖 Browse</button>
+      <button class="mode-btn" data-mode="flash">🎴 Flashcards</button>
+      <button class="mode-btn" data-mode="quiz">🎯 Quiz</button>
+      <button class="mode-btn" data-mode="speed">⚡ Speed Run</button>
+      <button class="mode-btn" data-mode="cases">🏥 Clinical Cases</button>
+      <button class="mode-btn" data-mode="calc">🧮 Peds Calc</button>
+      <button class="mode-btn" data-mode="mnem">🧠 Mnemonics</button>
+      <button class="mode-btn" data-mode="traps">🪤 Exam Traps</button>
+      <button class="mode-btn" data-mode="progress">📊 Progress</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- BROWSE -->
+<div class="mode-view active" id="view-browse">
+  <div class="search-row">
+    <input type="text" class="search-box" id="search" placeholder="🔍 Search any drug name — amox, ketorolac, acetam...">
+  </div>
+  <div class="filter-chips">
+    <button class="chip active" data-section="all">All 37</button>
+    <button class="chip" data-section="1">💊 NSAIDs</button>
+    <button class="chip" data-section="2">🌙 Opioids</button>
+    <button class="chip" data-section="3">🦠 Antibiotics</button>
+    <button class="chip" data-section="4">🍄 Antifungals</button>
+    <button class="chip" data-section="5">🧬 Antivirals</button>
+    <button class="chip" data-section="6">✨ Misc</button>
+  </div>
+  <div class="drug-grid" id="drug-grid">
+    <noscript>
+      <div style="grid-column:1/-1;padding:24px;background:#7a1a2a;border-radius:12px;color:#fff">
+        ⚠ JavaScript is disabled. Enable JS in Safari settings to use this app.
+      </div>
+    </noscript>
+    <div id="drug-grid-loading" style="grid-column:1/-1;padding:24px;background:var(--bg-3);border:1px dashed var(--border-2);border-radius:12px;color:var(--text-2);text-align:center;font-size:14px;line-height:1.6">
+      <div style="font-size:32px;margin-bottom:8px">⏳</div>
+      <div>Loading 37 drugs…</div>
+      <div style="color:var(--text-3);font-size:12px;margin-top:10px">If this message stays visible for more than a couple seconds, JavaScript didn't run. Try opening this file in <strong>Safari</strong> (not the Files app preview), and make sure you're viewing the latest version.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div class="mode-view" id="view-flash">
+  <div class="flash-container">
+    <div class="flash-top-bar">
+      <div><b id="flash-idx" style="color:var(--text)">1</b> / <span id="flash-total">0</span></div>
+      <div style="display:flex;gap:12px">
+        <span style="color:var(--mint)">✓ <b id="flash-known">0</b></span>
+        <span style="color:var(--rose)">↻ <b id="flash-review">0</b></span>
+      </div>
+    </div>
+    <div class="flash-progress-bar"><div class="flash-progress-fill" id="flash-progress-fill" style="width:0%"></div></div>
+    <div class="flashcard" id="flashcard">
+      <span class="flash-sec-tag" id="flash-tag">—</span>
+      <span class="flash-status" id="flash-status"></span>
+      <div class="flash-front" id="flash-front">
+        <div class="flash-front-emoji" id="flash-emoji">💊</div>
+        <h2 id="flash-drug">Drug</h2>
+        <p>tap to flip</p>
+      </div>
+      <div class="flash-back" id="flash-back"></div>
+      <span class="flash-hint">click to flip ↻</span>
+    </div>
+    <div class="flash-actions">
+      <button class="btn" id="flash-prev">← Prev</button>
+      <button class="btn btn-danger" id="flash-bad">😵 Review again</button>
+      <button class="btn btn-success" id="flash-good">✓ Got it!</button>
+      <button class="btn" id="flash-next">Next →</button>
+    </div>
+    <div class="flash-actions" style="margin-top:10px">
+      <button class="btn btn-ghost" id="flash-shuffle">🔀 Shuffle</button>
+      <button class="btn btn-ghost" id="flash-review-only">↻ Review only (<span id="flash-review-count">0</span>)</button>
+      <button class="btn btn-ghost" id="flash-all">All cards</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="mode-view" id="view-quiz">
+  <div class="quiz-container">
+    <div class="quiz-stats">
+      <div>Q<b id="quiz-num">1</b> • Score <b id="quiz-score">0</b>/<b id="quiz-total">0</b></div>
+      <div class="quiz-streak">🔥 <b id="quiz-streak-cur">0</b> streak</div>
+    </div>
+    <div class="quiz-card" id="quiz-card"></div>
+  </div>
+</div>
+
+<!-- SPEED RUN -->
+<div class="mode-view" id="view-speed">
+  <div id="speed-content"></div>
+</div>
+
+<!-- CASES -->
+<div class="mode-view" id="view-cases">
+  <div class="cases-container">
+    <h2 class="section-title">🏥 Clinical Cases</h2>
+    <p class="section-intro">Dental scenarios you'll actually see on the boards. Pick the right drug <em>and</em> dose.</p>
+    <div class="quiz-stats" style="margin-bottom:16px">
+      <div>Case <b id="case-num">1</b></div>
+      <div>Correct <b id="case-score">0</b>/<b id="case-total">0</b></div>
+    </div>
+    <div class="case-card" id="case-card"></div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="mode-view" id="view-calc">
+  <div class="calc-container">
+    <h2 class="section-title">🧮 Pediatric Dose Calculator</h2>
+    <p class="section-intro">Enter patient weight. Get mg-per-dose and mL-of-suspension for every peds-safe drug on the card.</p>
+    <div class="calc-input-card">
+      <div class="calc-input-row">
+        <span class="calc-label">Patient weight:</span>
+        <input type="number" class="calc-input" id="calc-weight" value="20" min="1" max="80">
+        <span class="calc-label">kg</span>
+      </div>
+    </div>
+    <div id="calc-results"></div>
+  </div>
+</div>
+
+<!-- MNEMONICS -->
+<div class="mode-view" id="view-mnem">
+  <h2 class="section-title">🧠 Memory Hooks</h2>
+  <p class="section-intro">Silly beats sensible. Rhyme, rhythm, absurdity — whatever sticks. These aren't official; they're exam-survival tricks.</p>
+  <div class="mnem-grid" id="mnem-grid"></div>
+</div>
+
+<!-- EXAM TRAPS -->
+<div class="mode-view" id="view-traps">
+  <h2 class="section-title">🪤 Exam Traps & Gotchas</h2>
+  <p class="section-intro">The specific places this card tries to trick you. Memorize these <em>outliers</em> — they're the reason you lose marks.</p>
+  <div id="traps-list"></div>
+</div>
+
+<!-- ABBREVIATIONS — removed as standalone; integrated into mnemonics -->
+
+<!-- PROGRESS -->
+<div class="mode-view" id="view-progress">
+  <h2 class="section-title">📊 Your Progress</h2>
+  <p class="section-intro">Everything saves to your browser locally. Refresh-proof.</p>
+  <div class="progress-grid">
+    <div class="progress-stat">
+      <div class="progress-stat-label">🔥 Streak</div>
+      <div class="progress-stat-val" id="prg-streak" style="color:var(--amber)">0</div>
+      <div class="progress-stat-sub" id="prg-streak-sub">Start today!</div>
+    </div>
+    <div class="progress-stat">
+      <div class="progress-stat-label">⭐ XP earned</div>
+      <div class="progress-stat-val" id="prg-xp" style="color:var(--mint)">0</div>
+      <div class="progress-stat-sub" id="prg-level">Level 1 — Rookie Resident</div>
+    </div>
+    <div class="progress-stat">
+      <div class="progress-stat-label">✓ Drugs mastered</div>
+      <div class="progress-stat-val" id="prg-mastered">0</div>
+      <div class="progress-stat-sub">out of 37</div>
+    </div>
+    <div class="progress-stat">
+      <div class="progress-stat-label">🎯 Quiz accuracy</div>
+      <div class="progress-stat-val" id="prg-acc">—</div>
+      <div class="progress-stat-sub" id="prg-acc-sub">Take a quiz first</div>
+    </div>
+  </div>
+  <h3 style="font-size:15px; margin-bottom:10px; color:var(--text-2)">Drug mastery grid</h3>
+  <div class="mastery-grid" id="mastery-grid"></div>
+  <div style="margin-top:28px; display:flex; gap:8px; flex-wrap:wrap">
+    <button class="btn btn-ghost" id="reset-all">↺ Reset all progress</button>
+    <button class="btn btn-ghost" onclick="document.querySelector('[data-mode=browse]').click()">← Back to browsing</button>
+  </div>
+  <h3 style="font-size:15px; margin: 28px 0 10px; color:var(--text-2)">📝 Abbreviations</h3>
+  <div class="abbrev-grid" id="abbrev-grid"></div>
+</div>
+
+</main>
+
+<script>
+// ═══════════ DATA (verified against source cards) ═══════════
+const DATA = {
+  sections: [
+    {
+      id: 1,
+      name: "NSAIDs & Nonopioid Analgesics",
+      short: "NSAIDs",
+      emoji: "💊",
+      color: "sec-1",
+      drugs: [
+        { emoji: "🩺", name: "Acetaminophen", adult: "325-1000mg q4-6h", peds: "10-15mg/kg q4-6h", adultMax: "4000mg", pedsMax: "75mg/kg", tab: "80, 160, 325, 500, 650mg", susp: "160mg/5ml, 32mg/ml, 80mg/ml", pedMgPerKg: 12.5, pedFreqPerDay: 5, suspConc: 160/5 },
+        { emoji: "🔥", name: "Ibuprofen", adult: "200-400mg q4-6h", peds: "4-10mg/kg q6-8h", adultMax: "2400mg", pedsMax: "40mg/kg", tab: "100, 200, 400, 600mg", susp: "100, 200mg/5ml", pedMgPerKg: 7, pedFreqPerDay: 4, suspConc: 100/5 },
+        { emoji: "🩸", name: "Aspirin", adult: "325-1000mg q4-6h", peds: "N/A", adultMax: "4000mg", pedsMax: "N/A", tab: "325, 500mg", susp: "N/A" },
+        { emoji: "⏰", name: "Diflunisal", adult: "500-1000 LD → 250-500mg q8-12h", peds: "N/A", adultMax: "1500mg", pedsMax: "N/A", tab: "250, 500mg", susp: "N/A", note: "Discontinued in Canada 🇨🇦" },
+        { emoji: "⌛", name: "Etodolac", adult: "200-400mg q6-8h", peds: "N/A", adultMax: "1000mg", pedsMax: "N/A", tab: "200, 300mg", susp: "N/A" },
+        { emoji: "💤", name: "Flurbiprofen", adult: "100mg q12h", peds: "N/A", adultMax: "—", pedsMax: "N/A", tab: "50, 100mg", susp: "N/A" },
+        { emoji: "🌡️", name: "Ketoprofen", adult: "25-50mg q6-8h", peds: "N/A", adultMax: "300mg", pedsMax: "N/A", tab: "50, 100, 200mg", susp: "N/A" },
+        { emoji: "⚡", name: "Ketorolac", adult: "10mg q4-6h", peds: "N/A", adultMax: "40mg", pedsMax: "N/A", tab: "10mg", susp: "N/A", note: "⚠ Only 40mg/day max! Potent — short course only" },
+        { emoji: "🦴", name: "Naproxen", adult: "500 LD → 250mg q6-8h", peds: "5-7mg/kg q8-12h", adultMax: "1250mg", pedsMax: "1000mg", tab: "250, 375, 500mg", susp: "125mg/5ml", pedMgPerKg: 6, pedFreqPerDay: 2.5, suspConc: 125/5 },
+        { emoji: "🦴", name: "Naproxen Sodium", adult: "550 LD → 275mg q6-8h", peds: "N/A", adultMax: "1375mg", pedsMax: "N/A", tab: "220, 275, 550mg", susp: "N/A" },
+        { emoji: "🎯", name: "Celecoxib", adult: "100-200mg q12-24h", peds: "N/A", adultMax: "400mg", pedsMax: "N/A", tab: "100, 200mg", susp: "N/A", note: "400mg loading dose optional • COX-2 selective" }
+      ],
+    },
+    {
+      id: 2,
+      name: "Opioids & Combinations",
+      short: "Opioids",
+      emoji: "🌙",
+      color: "sec-2",
+      drugs: [
+        { emoji: "🌿", name: "Codeine", adult: "30-60mg q4-6h", peds: "N/A", adultMax: "—", pedsMax: "N/A", tab: "15, 30mg (ER: 50-200mg)", susp: "5mg/ml" },
+        { emoji: "💊", name: "Oxycodone", adult: "5-10mg q4-6h", peds: "0.1-0.2mg/kg q4-6h", adultMax: "—", pedsMax: "—", tab: "5, 10, 20mg (ER: 5-80mg)", susp: "N/A", pedMgPerKg: 0.15, pedFreqPerDay: 5, suspConc: null },
+        { emoji: "🚫", name: "Meperidine", adult: "50-150mg q4-6h", peds: "N/A", adultMax: "—", pedsMax: "N/A", tab: "50mg", susp: "N/A", note: "Discontinued in Canada 🇨🇦 (a.k.a. Demerol)" },
+        { emoji: "🧬", name: "Tramadol", adult: "50-100mg q4-6h", peds: "N/A", adultMax: "400mg", pedsMax: "N/A", tab: "50mg (ER: 75-400mg)", susp: "N/A" },
+        { emoji: "🔢", name: "APAP + Codeine", adult: "300-600 / 15-30mg q4-6h", peds: "N/A", adultMax: "4000mg (APAP)", pedsMax: "N/A", tab: "T1: 300/8 • T2: 300/15 • T3: 300/30 • T4: 300/60", susp: "N/A", note: "Tylenol #1-4 also contain 15mg caffeine" },
+        { emoji: "💊", name: "APAP + Oxycodone", adult: "325-650 / 5-10mg q4-6h", peds: "N/A", adultMax: "4000mg (APAP)", pedsMax: "N/A", tab: "325/2.5mg, 325/5mg", susp: "N/A" },
+        { emoji: "🧬", name: "Tramacet (APAP + Tramadol)", adult: "325-650 / 37.5-75mg q4-6h", peds: "N/A", adultMax: "2600 / 300mg", pedsMax: "N/A", tab: "325/37.5mg", susp: "N/A" }
+      ],
+    },
+    {
+      id: 3,
+      name: "Antibiotics",
+      short: "Antibiotics",
+      emoji: "🦠",
+      color: "sec-3",
+      drugs: [
+        { emoji: "🌸", name: "Penicillin V", adult: "300-600mg qid", peds: "6-12mg/kg qid OR 8-16mg/kg tid", adultMax: "—", pedsMax: "—", tab: "300mg", susp: "125, 300mg/5ml", pedMgPerKg: 9, pedFreqPerDay: 4, suspConc: 125/5 },
+        { emoji: "💎", name: "Amoxicillin", adult: "250-500mg tid", peds: "7-15mg/kg tid", adultMax: "—", pedsMax: "—", tab: "125 (chew), 250, 500mg", susp: "125, 250mg/5ml", pedMgPerKg: 11, pedFreqPerDay: 3, suspConc: 250/5 },
+        { emoji: "💎", name: "Amoxicillin / Clavulanate", adult: "250-500/125mg tid OR 875/125mg bid", peds: "7-15mg/kg tid (amox)", adultMax: "—", pedsMax: "—", tab: "250/125, 500/125, 875/125mg", susp: "125/31.25, 250/62.5mg/5ml", pedMgPerKg: 11, pedFreqPerDay: 3, suspConc: 250/5 },
+        { emoji: "🛡️", name: "Clindamycin", adult: "150-300mg tid-qid", peds: "3-7mg/kg tid OR 2-5mg/kg qid", adultMax: "—", pedsMax: "—", tab: "150, 300mg", susp: "75mg/5ml", pedMgPerKg: 5, pedFreqPerDay: 3, suspConc: 75/5 },
+        { emoji: "🎫", name: "Azithromycin", adult: "500mg stat → 250mg qd", peds: "10-12mg/kg stat → 5-6mg/kg qd", adultMax: "—", pedsMax: "—", tab: "250, 600mg", susp: "100, 200mg/5ml", pedMgPerKg: 5.5, pedFreqPerDay: 1, suspConc: 200/5, note: "Z-pak: 5-day course (day 1 stat, days 2-5 half)" },
+        { emoji: "🎫", name: "Clarithromycin", adult: "250-500mg bid", peds: "7.5mg/kg bid", adultMax: "—", pedsMax: "—", tab: "250, 500mg", susp: "125, 250mg/5ml", pedMgPerKg: 7.5, pedFreqPerDay: 2, suspConc: 125/5 },
+        { emoji: "🎫", name: "Erythromycin", adult: "250-500mg qid", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "250mg", susp: "N/A" },
+        { emoji: "🔷", name: "Cephalexin", adult: "250-500mg tid-qid", peds: "12-25mg/kg bid OR 8-17mg/kg tid OR 6-13mg/kg qid", adultMax: "—", pedsMax: "—", tab: "250, 500mg", susp: "125, 250mg/5ml", pedMgPerKg: 18, pedFreqPerDay: 2, suspConc: 250/5 },
+        { emoji: "🟡", name: "Doxycycline (infection)", adult: "100mg qd-bid OR 200mg qd", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "100mg", susp: "N/A" },
+        { emoji: "🟡", name: "Doxycycline (host-mod)", adult: "20mg bid × 3-9 months", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "20, 40mg", susp: "N/A", note: "Sub-antimicrobial — blocks collagenase, doesn't kill bacteria" },
+        { emoji: "🟡", name: "Tetracycline", adult: "250-500mg qid", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "250mg", susp: "N/A" },
+        { emoji: "🐍", name: "Metronidazole", adult: "250-500mg tid", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "250, 500mg", susp: "N/A", note: "Anaerobes. NO alcohol (disulfiram rxn)" }
+      ],
+    },
+    {
+      id: 4,
+      name: "Antifungals",
+      short: "Antifungals",
+      emoji: "🍄",
+      color: "sec-4",
+      drugs: [
+        { emoji: "🍄", name: "Nystatin", adult: "400,000-600,000 units qid", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "N/A", susp: "100,000 units/ml (susp) • 100,000 units/g (cream)", note: "Swish and swallow (oral candidiasis). Not absorbed systemically" },
+        { emoji: "🫧", name: "Fluconazole", adult: "100-200mg qd", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "50, 100, 200mg", susp: "N/A" },
+        { emoji: "🫧", name: "Itraconazole", adult: "200mg qd", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "100mg", susp: "10mg/ml" },
+        { emoji: "🫧", name: "Ketoconazole", adult: "200-400mg qd", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "200mg", susp: "N/A" }
+      ],
+    },
+    {
+      id: 5,
+      name: "Antivirals",
+      short: "Antivirals",
+      emoji: "🧬",
+      color: "sec-5",
+      drugs: [
+        { emoji: "🧬", name: "Acyclovir", adult: "400mg 3-5×/day × 5-14 days", peds: "15-20mg/kg 3-5×/day × 5-14 days", adultMax: "—", pedsMax: "—", tab: "200, 400, 800mg", susp: "200mg/5ml (susp) • 5% cream apply 5×/day × 4 days", pedMgPerKg: 17.5, pedFreqPerDay: 4, suspConc: 200/5, note: "HSV / herpes labialis. Topical is only 4 days" }
+      ],
+    },
+    {
+      id: 6,
+      name: "Miscellaneous",
+      short: "Misc",
+      emoji: "✨",
+      color: "sec-6",
+      drugs: [
+        { emoji: "🦷", name: "Chlorhexidine Gluconate", adult: "Swish 15 ml × 30 sec after brushing, expectorate; bid", peds: "Same as adult (limited data)", adultMax: "—", pedsMax: "—", tab: "N/A", susp: "0.12% oral rinse", note: "Rinse AFTER brushing, don't swallow, don't drink water for 30 min" },
+        { emoji: "😴", name: "Diphenhydramine", adult: "25-50mg q6-8h", peds: "N/A", adultMax: "—", pedsMax: "—", tab: "12.5 (chew), 25, 50mg", susp: "N/A", note: "Antihistamine — also sedating. Used for oral allergy or as local-anesthetic alternative" }
+      ],
+    }
+  ]
+};
+
+const ABBREVS = [
+  { term: "qd", def: "once daily" },
+  { term: "bid", def: "twice daily" },
+  { term: "tid", def: "3× daily" },
+  { term: "qid", def: "4× daily" },
+  { term: "q4-6h", def: "every 4–6 hours" },
+  { term: "q8h", def: "every 8 hours" },
+  { term: "q12h", def: "every 12 hours" },
+  { term: "stat", def: "immediately (loading)" },
+  { term: "LD", def: "loading dose" },
+  { term: "ER", def: "extended release" },
+  { term: "APAP", def: "acetaminophen" },
+  { term: "NSAID", def: "nonsteroidal anti-inflammatory" },
+  { term: "COX-2", def: "cyclooxygenase-2" },
+  { term: "PCN", def: "penicillin" },
+  { term: "HSV", def: "herpes simplex virus" }
+];
+
+const MNEMONICS = [
+  {
+    hero: "🎢",
+    title: "NSAID Max Roller-coaster",
+    phrase: "4000 • 2400 • 1500 • 1250 • 40",
+    body: "Daily max dose descending:<ul><li><strong>4000mg:</strong> APAP & Aspirin (liver/bleeding)</li><li><strong>2400mg:</strong> Ibuprofen</li><li><strong>1500mg:</strong> Diflunisal</li><li><strong>1250mg:</strong> Naproxen</li><li><strong>40mg:</strong> Ketorolac (the baby!)</li></ul><em>Ketorolac is the outlier — only 40mg total!</em>"
+  },
+  {
+    hero: "🎫",
+    title: "Z-pak = Z End of Frequency",
+    phrase: '"Load big, then chill"',
+    body: "Azithromycin: <strong>500mg stat → 250mg qd</strong>. The ONLY once-daily antibiotic on the card. Letter <strong>Z</strong> is also last in the alphabet → last in frequency (once daily)."
+  },
+  {
+    hero: "👨‍👩‍👧",
+    title: "Antibiotic Frequency Family",
+    phrase: "PET qid • AMC tid • CDA bid • Z once",
+    body: "<ul><li><strong>QID (4×):</strong> <em>PET</em> — Pen V, Erythro, Tetra</li><li><strong>TID (3×):</strong> <em>AMC</em> — Amox, Metro, Cephalexin</li><li><strong>BID (2×):</strong> <em>CDA</em> — Clarithro, Doxy, Amox/clav-875</li><li><strong>QD (1×):</strong> <em>Z</em> — Azithro</li></ul>Older drugs hit harder = qid. Newer drugs hit longer = less often."
+  },
+  {
+    hero: "🩸",
+    title: "PCN Allergy? Call CAZ!",
+    phrase: '"CAZ saves the day"',
+    body: "If patient is penicillin-allergic → <strong>C</strong>lindamycin or <strong>AZ</strong>ithromycin.<br>Avoid: amoxicillin, amox/clav, <em>and cephalexin</em> (cephalosporin cross-reactivity ~1-10%)."
+  },
+  {
+    hero: "👯",
+    title: "Doxycycline's Double Life",
+    phrase: "100 for germs • 20 for gums",
+    body: "<strong>Infection:</strong> 100mg qd-bid OR 200mg qd<br><strong>Periodontitis (host-mod):</strong> 20mg bid × 3-9 months<br><em>The 20mg dose is sub-antimicrobial — it blocks collagenase, doesn't kill bacteria.</em>"
+  },
+  {
+    hero: "🔢",
+    title: "Tylenol # Counting Rhyme",
+    phrase: '"Eight, fifteen, thirty, sixty"',
+    body: "All <strong>Tylenol # products = 300mg APAP</strong> + these codeine doses:<ul><li><strong>T1:</strong> 8mg</li><li><strong>T2:</strong> 15mg</li><li><strong>T3:</strong> 30mg ← most Rx'd</li><li><strong>T4:</strong> 60mg</li></ul>T1-T4 also contain 15mg caffeine. Easy quiz trap."
+  },
+  {
+    hero: "🏝️",
+    title: "Amox/Clav Slash Rule",
+    phrase: '"125 is clavulanate — always"',
+    body: "The number AFTER the slash is ALWAYS 125mg clavulanate:<br><strong>250/125 • 500/125 • 875/125</strong><br>Only <strong>875/125</strong> is bid — the rest are tid. The 875 bid version is the adult workhorse for resistant infections."
+  },
+  {
+    hero: "🍄",
+    title: "Antifungal 'azoles' = qd Squad",
+    phrase: '"All azoles, once daily"',
+    body: "Fluconazole, Itraconazole, Ketoconazole = all <strong>qd</strong>.<br>Nystatin is the odd one: <strong>qid swish-and-swallow</strong> (not absorbed, acts locally).<br><em>If it ends in -azole → once daily.</em>"
+  },
+  {
+    hero: "🧬",
+    title: "Acyclovir Triple-4",
+    phrase: '"400 × 4-ish × 4-teen days"',
+    body: "<ul><li><strong>400mg</strong> per dose</li><li><strong>3–5× per day</strong></li><li><strong>5–14 days</strong></li></ul>Topical 5% cream? <strong>5× daily × 4 days only</strong> (not 14). Remember: cream = shorter course."
+  },
+  {
+    hero: "🦷",
+    title: "Chlorhexidine 15/30/2/after",
+    phrase: '"Fifteen, thirty, twice, post-brush"',
+    body: "<ul><li><strong>15 ml</strong> per rinse</li><li><strong>30 seconds</strong> swish</li><li><strong>bid</strong> (twice daily)</li><li><strong>AFTER</strong> brushing — toothpaste inactivates it</li></ul>Then spit out. No water/food for 30 min. Concentration: <strong>0.12%</strong>."
+  },
+  {
+    hero: "🇨🇦",
+    title: "Gone Up North",
+    phrase: '"Diflunisal & Meperidine — eh, no"',
+    body: "Two drugs starred as <strong>discontinued in Canada</strong>:<ul><li><strong>Diflunisal</strong> (NSAID, long half-life)</li><li><strong>Meperidine</strong> / Demerol (opioid)</li></ul>Classic quiz trap if you're writing Canadian boards."
+  },
+  {
+    hero: "🍺",
+    title: "Metronidazole Alcohol Rule",
+    phrase: '"Metro + booze = bruuughhh"',
+    body: "Metronidazole inhibits <strong>aldehyde dehydrogenase</strong> → disulfiram-like reaction: flushing, nausea, vomiting.<br><strong>No alcohol</strong> during treatment AND for <strong>3 days after</strong>. Warn the patient."
+  },
+  {
+    hero: "🏋️",
+    title: "Load-Then-Lighten Club",
+    phrase: "big dose first, smaller after",
+    body: "Drugs with a loading-dose pattern:<ul><li><strong>Azithromycin:</strong> 500 → 250 qd</li><li><strong>Naproxen:</strong> 500 → 250 q6-8h</li><li><strong>Naproxen Na:</strong> 550 → 275 q6-8h</li><li><strong>Diflunisal:</strong> 500-1000 → 250-500 q8-12h</li><li><strong>Celecoxib:</strong> optional 400 load</li></ul>LD = loading dose (not mandatory except for azithro)."
+  },
+  {
+    hero: "👶",
+    title: "Peds Club Members",
+    phrase: '"APAP, IBU, NAP, OXY, + all antibiotics-with-peds"',
+    body: "Has peds dosing: APAP, Ibuprofen, Naproxen, Oxycodone, Pen V, Amox, Amox/Clav, Clinda, Azithro, Clarithro, Cephalexin, Acyclovir.<br><strong>No peds dose:</strong> Erythro, Doxy, Tetra, Metro, all antifungals (except not approved), Diphenhydramine (on this card).<br><em>If the card says N/A, the exam answer is N/A.</em>"
+  }
+];
+
+const TRAPS = [
+  { title: "⚡ Ketorolac max is only 40 mg/day", body: "Every other NSAID is in grams — Ketorolac is the single exception. Short-course only (<5 days). Oral/IM. Pain relief is strong but renal/GI risk is high." },
+  { title: "🩸 Aspirin & Acetaminophen share the 4000 mg ceiling", body: "Both cap at <strong>4000 mg/day</strong>. APAP for liver, ASA for GI bleeding/Reye's. Easy confusion point." },
+  { title: "🇨🇦 Two drugs are discontinued in Canada", body: "<strong>Diflunisal</strong> and <strong>Meperidine</strong>. If the question gives you a Canadian patient and these are answer choices, they're distractors." },
+  { title: "☕ Tylenol #1–4 contain 15 mg caffeine", body: "Not on the main drug data row — it's in the footnote. Boards loves testing this." },
+  { title: "🦴 Naproxen vs Naproxen Sodium — different doses!", body: "<strong>Naproxen:</strong> 250/500mg (max 1250) • <strong>Naproxen Sodium:</strong> 275/550mg (max 1375). The Na version has ~10% more because the sodium adds weight." },
+  { title: "🟡 Doxycycline has TWO rows", body: "If the question says 'periodontitis host-modulation' → <strong>20mg bid × 3-9 months</strong>, NOT 100mg. It's sub-antimicrobial." },
+  { title: "🎫 Azithromycin is the only 'stat then qd'", body: "<strong>500mg stat → 250mg qd</strong>. If a question describes a 5-day antibiotic course starting with a bigger dose, it's azithro." },
+  { title: "🔷 Cephalexin is NOT safe in PCN allergy (usually)", body: "Despite being a different class, 1st-gen cephalosporins share the β-lactam ring → ~1-10% cross-reactivity. PCN-allergic → go to <strong>Clinda or Azithro</strong>, NOT cephalexin." },
+  { title: "🐍 Metronidazole + alcohol = disulfiram reaction", body: "No alcohol during treatment AND for 3 days after. Applies to mouthwash with alcohol too. Patient education is the exam point." },
+  { title: "🍄 Nystatin is NOT an azole", body: "It's a polyene. Dosed in <strong>units, not mg</strong> (400,000-600,000 units qid). Swish-and-swallow. Not absorbed systemically — safe in pregnancy." },
+  { title: "🦷 Chlorhexidine after brushing — NOT before", body: "Toothpaste SLS inactivates chlorhexidine. Wait 30 min after brushing, then rinse. Also: 0.12%, 15ml, 30s, bid." },
+  { title: "🧬 Acyclovir topical course is different", body: "Oral: 5-14 days. Topical 5% cream: <strong>5×/day × 4 days only</strong>. Don't conflate the two." }
+];
+
+const CASES = [
+  {
+    scenario: "A <span class='patient'>35-year-old man</span> presents with acute pulpitis of tooth #19. He's otherwise healthy, no allergies, not on any medications. NSAIDs are tolerated.",
+    q: "What is the appropriate first-line analgesic and dose?",
+    opts: ["Ibuprofen 400mg q4-6h", "Ketorolac 10mg q4-6h (max 40mg/day)", "Acetaminophen 325mg q4-6h only", "Oxycodone 5mg q4-6h"],
+    correct: 0,
+    explain: "<b>Ibuprofen 400mg q4-6h</b> is first-line for dental pulpitis pain — NSAIDs target the prostaglandin-driven pulpal inflammation better than APAP. Ketorolac is reserved for severe post-op pain (short course, 40mg/day max). Opioids aren't first-line for odontogenic pain."
+  },
+  {
+    scenario: "A <span class='patient'>28-year-old woman with a severe penicillin allergy</span> (anaphylaxis history) needs antibiotic prophylaxis for a periapical abscess drainage.",
+    q: "Best antibiotic choice?",
+    opts: ["Amoxicillin 500mg tid", "Cephalexin 500mg qid", "Clindamycin 300mg tid-qid", "Tetracycline 500mg qid"],
+    correct: 2,
+    explain: "<b>Clindamycin 150-300mg tid-qid</b> is the go-to for PCN-allergic patients. Avoid <em>both</em> amoxicillin AND cephalexin (β-lactam cross-reactivity ~1-10%). Azithromycin is also acceptable (500mg stat → 250mg qd)."
+  },
+  {
+    scenario: "A <span class='patient'>6-year-old child weighing 20 kg</span> needs ibuprofen for post-extraction pain. You prescribe the 100 mg/5 ml suspension.",
+    q: "What volume of suspension per dose (using 7 mg/kg)?",
+    opts: ["3.5 ml", "7 ml", "10 ml", "14 ml"],
+    correct: 1,
+    explain: "<b>7 ml per dose.</b> 20 kg × 7 mg/kg = 140 mg. Suspension is 100 mg per 5 ml → 20 mg/ml. 140 mg ÷ 20 mg/ml = 7 ml q6-8h. Don't exceed 40 mg/kg/day max."
+  },
+  {
+    scenario: "A <span class='patient'>45-year-old man</span> is diagnosed with moderate chronic periodontitis. You want to add a host-modulation agent as adjunct to SRP.",
+    q: "What's the right regimen?",
+    opts: ["Doxycycline 100mg bid × 10 days", "Doxycycline 20mg bid × 3-9 months", "Metronidazole 500mg tid × 7 days", "Amoxicillin 500mg tid × 14 days"],
+    correct: 1,
+    explain: "<b>Doxycycline 20mg bid × 3-9 months</b> is sub-antimicrobial — it inhibits host collagenase (matrix metalloproteinases) without killing bacteria. The 100mg dose is for infection. Easy exam trap."
+  },
+  {
+    scenario: "A <span class='patient'>70-year-old woman with denture stomatitis</span> shows white plaques on the palate that scrape off revealing erythema. No systemic involvement.",
+    q: "First-line treatment?",
+    opts: ["Fluconazole 200mg qd × 14 days", "Nystatin oral suspension 400,000-600,000 units qid swish-and-swallow", "Acyclovir 400mg 5×/day", "Ketoconazole 400mg qd"],
+    correct: 1,
+    explain: "<b>Nystatin oral suspension (100,000 units/ml), 400,000-600,000 units qid, swish-and-swallow.</b> It's a polyene, not an azole — works topically, not absorbed systemically → safer. Azoles (fluconazole) are for systemic/resistant cases."
+  },
+  {
+    scenario: "A <span class='patient'>32-year-old</span> presents with recurrent herpes labialis on the upper lip, onset 24 hours ago.",
+    q: "Systemic treatment?",
+    opts: ["Acyclovir 400mg 3-5×/day × 5-14 days", "Acyclovir 5% cream only", "Nystatin swish-and-swallow qid", "Amoxicillin 500mg tid"],
+    correct: 0,
+    explain: "<b>Acyclovir 400mg 3-5×/day × 5-14 days.</b> Early systemic antivirals shorten duration. 5% cream works topically but is only × 4 days. Antibiotics are useless against viruses."
+  },
+  {
+    scenario: "A <span class='patient'>55-year-old on warfarin</span> needs an antibiotic for a dental infection. He's not allergic to penicillin.",
+    q: "Which antibiotic should you AVOID due to INR interaction?",
+    opts: ["Amoxicillin 500mg tid", "Cephalexin 500mg qid", "Clarithromycin 500mg bid", "Metronidazole 500mg tid"],
+    correct: 2,
+    explain: "<b>Clarithromycin (and erythromycin)</b> are CYP3A4 inhibitors → warfarin levels spike → bleeding risk. Metronidazole also raises INR. Amoxicillin has minimal interaction and is the safest first-line for a warfarin patient."
+  },
+  {
+    scenario: "A <span class='patient'>25-year-old woman</span> is getting an extraction. You want a pre-procedural antibacterial rinse to reduce bacteremia.",
+    q: "Correct chlorhexidine protocol?",
+    opts: ["0.12% Swish 5ml × 1 min before brushing", "0.12% Swish 15ml × 30 sec after brushing, bid", "0.2% Swish 10ml × 60 sec qid", "0.05% Swish 15ml × 30 sec qd"],
+    correct: 1,
+    explain: "<b>0.12% chlorhexidine, 15 ml × 30 sec, bid, AFTER brushing</b> (toothpaste SLS inactivates it). Then spit — don't swallow. No water or food for 30 min after."
+  },
+  {
+    scenario: "A <span class='patient'>60-year-old with osteoarthritis</span> is taking ibuprofen 400mg tid for chronic knee pain. He needs additional post-extraction analgesia.",
+    q: "Best add-on?",
+    opts: ["Another NSAID — naproxen", "Acetaminophen 500-1000mg q4-6h (max 4g/day)", "Ketorolac 10mg q4-6h", "Aspirin 650mg q4-6h"],
+    correct: 1,
+    explain: "<b>Acetaminophen</b> — APAP + ibuprofen is the gold-standard dental combo (additive analgesia via different mechanisms). Stacking NSAIDs increases GI/renal risk without more pain relief."
+  },
+  {
+    scenario: "A <span class='patient'>40-year-old with a Ludwig's angina-style spreading infection</span> with anaerobic involvement. No allergies.",
+    q: "Best antibiotic combo?",
+    opts: ["Amoxicillin alone 500mg tid", "Amoxicillin 500mg tid + Metronidazole 500mg tid", "Azithromycin alone", "Cephalexin 500mg qid"],
+    correct: 1,
+    explain: "<b>Amoxicillin + Metronidazole</b> is the classic \"odontogenic combo\" — amox covers aerobes/facultatives, metro adds anaerobic coverage. Warn about alcohol (disulfiram reaction with metro)."
+  },
+  {
+    scenario: "A <span class='patient'>Canadian patient</span> asks about taking Tylenol #3 for severe dental pain. She also asks whether she can get Demerol for breakthrough pain.",
+    q: "What's in Tylenol #3, and is Demerol available?",
+    opts: ["300mg APAP + 30mg codeine; Demerol (meperidine) is discontinued in Canada", "300mg APAP + 15mg codeine; Demerol is available", "325mg APAP + 60mg codeine; Demerol is discontinued", "500mg APAP + 30mg codeine; Demerol is available"],
+    correct: 0,
+    explain: "<b>Tylenol #3 = 300mg APAP + 30mg codeine + 15mg caffeine.</b> Meperidine (Demerol) is discontinued in Canada — one of two drugs on the card with that flag (the other is Diflunisal)."
+  },
+  {
+    scenario: "A <span class='patient'>dentist</span> wants to prescribe celecoxib for a patient with NSAID-induced gastritis history.",
+    q: "Correct dose?",
+    opts: ["100-200mg q12-24h, max 400mg/day; optional 400mg LD", "50mg bid, max 200mg/day", "400mg qid, max 1600mg/day", "25mg q6h, max 100mg/day"],
+    correct: 0,
+    explain: "<b>Celecoxib 100-200mg q12-24h, max 400mg/day.</b> It's COX-2 selective → less GI toxicity than classic NSAIDs. 400mg loading dose is OPTIONAL (not mandatory). Watch cardiovascular risk."
+  }
+];
+
+// ═══════════ FLATTEN + HELPERS ═══════════
+const ALL_DRUGS = [];
+DATA.sections.forEach(s => {
+  s.drugs.forEach(d => ALL_DRUGS.push({ ...d, sectionId: s.id, sectionName: s.name, sectionShort: s.short, sectionColor: s.color }));
+});
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const _memStore = {};
+function storageGet(key, fallback) {
+  try {
+    const v = localStorage.getItem("pharma-" + key);
+    if (v === null || v === undefined) return (_memStore[key] !== undefined ? _memStore[key] : fallback);
+    return JSON.parse(v);
+  } catch (e) { return (_memStore[key] !== undefined ? _memStore[key] : fallback); }
+}
+function storageSet(key, val) {
+  _memStore[key] = val;
+  try { localStorage.setItem("pharma-" + key, JSON.stringify(val)); } catch (e) { /* no-op: private browsing / file://  */ }
+}
+
+// ═══════════ STATE ═══════════
+const S = {
+  mode: "browse",
+  filterSec: "all",
+  searchQ: "",
+  progress: storageGet("progress", {}),
+  xp: storageGet("xp", 0),
+  streak: storageGet("streak", 0),
+  lastActive: storageGet("lastActive", null),
+  quizTotal: storageGet("quizTotal", 0),
+  quizCorrect: storageGet("quizCorrect", 0),
+  bestSpeed: storageGet("bestSpeed", 0),
+  flash: { deck: [], idx: 0, flipped: false, filterReview: false },
+  quiz: { current: null, score: 0, total: 0, streakCur: 0 },
+  speed: { active: false, score: 0, time: 60, timer: null, current: null },
+  case: { idx: 0, score: 0, total: 0, answered: false }
+};
+
+function awardXP(n, source = "") {
+  S.xp += n;
+  storageSet("xp", S.xp);
+  updateHeaderStats();
+  // flash in header
+  const el = document.getElementById("hdr-xp");
+  if (el) { el.parentElement.classList.add("pop"); setTimeout(() => el.parentElement.classList.remove("pop"), 300); }
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  const last = S.lastActive;
+  if (last === today) return;
+  if (last) {
+    const lastDate = new Date(last);
+    const diff = Math.floor((new Date(today) - lastDate) / 86400000);
+    if (diff === 1) S.streak += 1;
+    else if (diff > 1) S.streak = 1;
+  } else S.streak = 1;
+  S.lastActive = today;
+  storageSet("streak", S.streak);
+  storageSet("lastActive", S.lastActive);
+}
+
+function updateHeaderStats() {
+  document.getElementById("hdr-streak").textContent = S.streak;
+  document.getElementById("hdr-xp").textContent = S.xp;
+  const mastered = Object.values(S.progress).filter(v => v === "known").length;
+  document.getElementById("hdr-mastered").textContent = mastered;
+}
+
+function confetti() {
+  const colors = ["#fbbf24", "#fb7185", "#5eead4", "#7dd3fc", "#c4b5fd", "#bef264"];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti";
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.animationDuration = (Math.random() * 1.5 + 1.2) + "s";
+    el.style.top = "-20px";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+// ═══════════ BROWSE ═══════════
+function renderBrowse() {
+  const grid = document.getElementById("drug-grid");
+  grid.innerHTML = ALL_DRUGS.map(d => `
+    <div class="drug-card ${d.sectionColor}" data-section="${d.sectionId}" data-drug="${d.name.toLowerCase()}">
+      <div class="sec-stripe"></div>
+      <div class="drug-card-head">
+        <div class="drug-emoji">${d.emoji}</div>
+        <h3>${d.name}</h3>
+        <div class="drug-sec-label">§${d.sectionId} ${d.sectionShort}</div>
+      </div>
+      <div class="drug-rows">
+        <div class="drug-dose-row"><div class="drug-dose-label">Adult</div><div class="drug-dose-val">${d.adult}</div></div>
+        <div class="drug-dose-row"><div class="drug-dose-label">Peds</div><div class="drug-dose-val ${d.peds==='N/A'?'na':''}">${d.peds}</div></div>
+        <div class="drug-dose-row"><div class="drug-dose-label">Tablet</div><div class="drug-dose-val ${d.tab==='N/A'?'na':''}">${d.tab}</div></div>
+        <div class="drug-dose-row"><div class="drug-dose-label">Susp/top</div><div class="drug-dose-val ${d.susp==='N/A'?'na':''}">${d.susp}</div></div>
+      </div>
+      ${(d.adultMax && d.adultMax !== "—") ? `<span class="drug-max-pill">🚨 max: ${d.adultMax}${d.pedsMax && d.pedsMax !== "—" && d.pedsMax !== "N/A" ? ` • peds ${d.pedsMax}` : ""}</span>` : ""}
+      ${d.note ? `<div class="drug-note">💡 ${d.note}</div>` : ""}
+    </div>
+  `).join("");
+}
+
+function applyBrowseFilters() {
+  const q = S.searchQ.toLowerCase().trim();
+  const sec = S.filterSec;
+  document.querySelectorAll(".drug-card").forEach(c => {
+    const matchesSec = sec === "all" || c.dataset.section === sec;
+    const matchesQ = !q || c.dataset.drug.includes(q);
+    c.classList.toggle("hidden", !(matchesSec && matchesQ));
+  });
+}
+
+// ═══════════ FLASHCARDS ═══════════
+function initFlash(filter = "all") {
+  if (filter === "review") {
+    S.flash.deck = ALL_DRUGS.filter(d => S.progress[d.name] === "review");
+    S.flash.filterReview = true;
+    if (S.flash.deck.length === 0) { S.flash.deck = ALL_DRUGS; S.flash.filterReview = false; alert("No cards in review pile — showing all."); }
+  } else {
+    S.flash.deck = [...ALL_DRUGS];
+    S.flash.filterReview = false;
+  }
+  S.flash.idx = 0;
+  S.flash.flipped = false;
+  renderFlash();
+}
+
+function renderFlash() {
+  const d = S.flash.deck[S.flash.idx];
+  if (!d) return;
+  const total = S.flash.deck.length;
+  document.getElementById("flash-idx").textContent = S.flash.idx + 1;
+  document.getElementById("flash-total").textContent = total;
+  document.getElementById("flash-progress-fill").style.width = ((S.flash.idx + 1) / total * 100) + "%";
+
+  const known = Object.values(S.progress).filter(v => v === "known").length;
+  const review = Object.values(S.progress).filter(v => v === "review").length;
+  document.getElementById("flash-known").textContent = known;
+  document.getElementById("flash-review").textContent = review;
+  document.getElementById("flash-review-count").textContent = review;
+
+  document.getElementById("flash-drug").textContent = d.name;
+  document.getElementById("flash-emoji").textContent = d.emoji;
+  const tag = document.getElementById("flash-tag");
+  tag.textContent = d.sectionShort;
+  tag.className = `flash-sec-tag tag-${d.sectionColor}`;
+
+  const status = S.progress[d.name];
+  const statusEl = document.getElementById("flash-status");
+  statusEl.textContent = status === "known" ? "✓ known" : status === "review" ? "↻ review" : "";
+  statusEl.style.color = status === "known" ? "var(--mint)" : status === "review" ? "var(--rose)" : "";
+
+  document.getElementById("flash-back").innerHTML = `
+    <h3>${d.emoji} ${d.name}</h3>
+    <div class="flash-row"><div class="flash-label">Adult</div><div class="flash-value ${d.adult==='N/A'?'na':''}">${d.adult}</div></div>
+    <div class="flash-row"><div class="flash-label">Peds</div><div class="flash-value ${d.peds==='N/A'?'na':''}">${d.peds}</div></div>
+    ${d.adultMax && d.adultMax !== "—" ? `<div class="flash-row"><div class="flash-label">Adult max</div><div class="flash-value" style="color:var(--coral)">${d.adultMax}</div></div>` : ""}
+    ${d.pedsMax && d.pedsMax !== "—" && d.pedsMax !== "N/A" ? `<div class="flash-row"><div class="flash-label">Peds max</div><div class="flash-value" style="color:var(--coral)">${d.pedsMax}</div></div>` : ""}
+    <div class="flash-row"><div class="flash-label">Tablet</div><div class="flash-value ${d.tab==='N/A'?'na':''}">${d.tab}</div></div>
+    <div class="flash-row"><div class="flash-label">Susp/top</div><div class="flash-value ${d.susp==='N/A'?'na':''}">${d.susp}</div></div>
+    ${d.note ? `<div class="flash-row"><div class="flash-label">Note</div><div class="flash-value" style="color:var(--amber)">${d.note}</div></div>` : ""}
+  `;
+  document.getElementById("flash-front").classList.toggle("hidden", S.flash.flipped);
+  document.getElementById("flash-back").classList.toggle("show", S.flash.flipped);
+}
+
+function nextFlash() { S.flash.idx = (S.flash.idx + 1) % S.flash.deck.length; S.flash.flipped = false; renderFlash(); }
+function prevFlash() { S.flash.idx = (S.flash.idx - 1 + S.flash.deck.length) % S.flash.deck.length; S.flash.flipped = false; renderFlash(); }
+function markFlash(status) {
+  const d = S.flash.deck[S.flash.idx];
+  const prev = S.progress[d.name];
+  S.progress[d.name] = status;
+  storageSet("progress", S.progress);
+  if (status === "known" && prev !== "known") awardXP(5);
+  updateHeaderStats();
+  nextFlash();
+}
+
+document.getElementById("flashcard").addEventListener("click", () => { S.flash.flipped = !S.flash.flipped; renderFlash(); });
+["flash-next","flash-prev","flash-good","flash-bad","flash-shuffle","flash-review-only","flash-all"].forEach(id => {
+  document.getElementById(id).addEventListener("click", e => e.stopPropagation());
+});
+document.getElementById("flash-next").onclick = e => { e.stopPropagation(); nextFlash(); };
+document.getElementById("flash-prev").onclick = e => { e.stopPropagation(); prevFlash(); };
+document.getElementById("flash-good").onclick = e => { e.stopPropagation(); markFlash("known"); };
+document.getElementById("flash-bad").onclick = e => { e.stopPropagation(); markFlash("review"); };
+document.getElementById("flash-shuffle").onclick = e => { e.stopPropagation(); S.flash.deck = shuffle(S.flash.deck); S.flash.idx = 0; S.flash.flipped = false; renderFlash(); };
+document.getElementById("flash-review-only").onclick = e => { e.stopPropagation(); initFlash("review"); };
+document.getElementById("flash-all").onclick = e => { e.stopPropagation(); initFlash("all"); };
+
+// ═══════════ QUIZ ═══════════
+function genQuizQ() {
+  const correct = ALL_DRUGS[Math.floor(Math.random() * ALL_DRUGS.length)];
+  const types = [
+    { label: "Adult dose", field: "adult", q: drug => `What is the <b>adult dose</b> of ${drug.name}?` },
+    { label: "Peds dose", field: "peds", q: drug => `Pediatric dose of <b>${drug.name}</b>?` },
+    { label: "Max dose", field: "adultMax", q: drug => `What's the <b>daily maximum</b> of ${drug.name}?` },
+    { label: "Tablet strengths", field: "tab", q: drug => `Which tablet/capsule strengths does <b>${drug.name}</b> come in?` },
+    { label: "Suspension", field: "susp", q: drug => `Suspension strength of <b>${drug.name}</b>?` }
+  ].filter(t => { const v = correct[t.field]; return v && v !== "N/A" && v !== "—"; });
+  if (!types.length) return genQuizQ();
+  const type = types[Math.floor(Math.random() * types.length)];
+  const wrongPool = ALL_DRUGS.filter(d => d.name !== correct.name && d[type.field] && d[type.field] !== "N/A" && d[type.field] !== "—").map(d => d[type.field]).filter((v, i, a) => a.indexOf(v) === i);
+  const wrongs = shuffle(wrongPool).slice(0, 3);
+  return { q: type.q(correct), opts: shuffle([correct[type.field], ...wrongs]), correct: correct[type.field], tag: type.label, drug: correct };
+}
+
+function renderQuiz() {
+  const q = genQuizQ();
+  S.quiz.current = q;
+  document.getElementById("quiz-num").textContent = S.quiz.total + 1;
+  document.getElementById("quiz-streak-cur").textContent = S.quiz.streakCur;
+  document.getElementById("quiz-card").innerHTML = `
+    <span class="quiz-q-tag tag-${q.drug.sectionColor}">${q.tag} · ${q.drug.sectionShort}</span>
+    <div class="quiz-q">${q.q}</div>
+    ${q.opts.map((o, i) => `<button class="quiz-opt" data-opt="${encodeURIComponent(o)}">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}
+    <div class="quiz-feedback" id="quiz-fb"></div>
+    <div class="quiz-next" id="quiz-next-wrap"></div>
+  `;
+  document.querySelectorAll(".quiz-opt").forEach(b => b.onclick = () => answerQuiz(b, decodeURIComponent(b.dataset.opt)));
+}
+
+function answerQuiz(btn, selected) {
+  const q = S.quiz.current;
+  document.querySelectorAll(".quiz-opt").forEach(b => {
+    b.disabled = true;
+    const v = decodeURIComponent(b.dataset.opt);
+    if (v === q.correct) b.classList.add("correct");
+    else if (b === btn) b.classList.add("wrong");
+  });
+  S.quiz.total++;
+  S.quizTotal++;
+  const fb = document.getElementById("quiz-fb");
+  if (selected === q.correct) {
+    S.quiz.score++;
+    S.quiz.streakCur++;
+    S.quizCorrect++;
+    awardXP(10);
+    if (S.quiz.streakCur === 5) confetti();
+    fb.className = "quiz-feedback correct-fb show";
+    fb.innerHTML = `✓ Correct! +10 XP ${S.quiz.streakCur >= 3 ? "· 🔥 "+S.quiz.streakCur+" in a row!" : ""}`;
+  } else {
+    S.quiz.streakCur = 0;
+    fb.className = "quiz-feedback wrong-fb show";
+    fb.innerHTML = `✗ Answer: <strong>${q.correct}</strong>`;
+  }
+  storageSet("quizTotal", S.quizTotal);
+  storageSet("quizCorrect", S.quizCorrect);
+  document.getElementById("quiz-score").textContent = S.quiz.score;
+  document.getElementById("quiz-total").textContent = S.quiz.total;
+  document.getElementById("quiz-streak-cur").textContent = S.quiz.streakCur;
+  document.getElementById("quiz-next-wrap").innerHTML = `<button class="btn btn-primary" onclick="renderQuiz()">Next question →</button>`;
+}
+
+// ═══════════ SPEED RUN ═══════════
+function speedHome() {
+  document.getElementById("speed-content").innerHTML = `
+    <div class="speed-home">
+      <div class="speed-hero-emoji">⚡</div>
+      <h2>Speed Run</h2>
+      <p>60 seconds. As many correct answers as you can. Wrong answers don't deduct.</p>
+      <div class="speed-best">Best score: <b>${S.bestSpeed}</b></div>
+      <button class="btn btn-primary" onclick="speedStart()" style="font-size:16px; padding: 14px 32px">🚀 Start</button>
+    </div>
+  `;
+}
+
+function speedStart() {
+  S.speed.active = true;
+  S.speed.score = 0;
+  S.speed.time = 60;
+  document.getElementById("speed-content").innerHTML = `
+    <div class="quiz-container">
+      <div class="speed-timer" id="speed-timer">0:60</div>
+      <div class="quiz-stats"><div>Score: <b id="speed-score">0</b></div><div>⚡ Live</div></div>
+      <div class="quiz-card" id="speed-card"></div>
+    </div>
+  `;
+  speedNext();
+  S.speed.timer = setInterval(() => {
+    S.speed.time--;
+    const mm = Math.floor(S.speed.time / 60);
+    const ss = (S.speed.time % 60).toString().padStart(2, "0");
+    const t = document.getElementById("speed-timer");
+    if (t) { t.textContent = `${mm}:${ss}`; t.classList.toggle("warn", S.speed.time <= 10); }
+    if (S.speed.time <= 0) speedEnd();
+  }, 1000);
+}
+
+function speedNext() {
+  const q = genQuizQ();
+  S.speed.current = q;
+  const card = document.getElementById("speed-card");
+  if (!card) return;
+  card.innerHTML = `
+    <span class="quiz-q-tag tag-${q.drug.sectionColor}">${q.tag}</span>
+    <div class="quiz-q" style="font-size:16px">${q.q}</div>
+    ${q.opts.map((o, i) => `<button class="quiz-opt" data-opt="${encodeURIComponent(o)}">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}
+  `;
+  document.querySelectorAll("#speed-card .quiz-opt").forEach(b => b.onclick = () => speedAnswer(b, decodeURIComponent(b.dataset.opt)));
+}
+
+function speedAnswer(btn, selected) {
+  const q = S.speed.current;
+  if (selected === q.correct) {
+    btn.classList.add("correct");
+    S.speed.score++;
+    document.getElementById("speed-score").textContent = S.speed.score;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#speed-card .quiz-opt").forEach(b => {
+      if (decodeURIComponent(b.dataset.opt) === q.correct) b.classList.add("correct");
+    });
+  }
+  document.querySelectorAll("#speed-card .quiz-opt").forEach(b => b.disabled = true);
+  setTimeout(() => { if (S.speed.active) speedNext(); }, 400);
+}
+
+function speedEnd() {
+  clearInterval(S.speed.timer);
+  S.speed.active = false;
+  const newBest = S.speed.score > S.bestSpeed;
+  if (newBest) { S.bestSpeed = S.speed.score; storageSet("bestSpeed", S.bestSpeed); confetti(); }
+  awardXP(S.speed.score * 2);
+  document.getElementById("speed-content").innerHTML = `
+    <div class="speed-home">
+      <div class="speed-hero-emoji">${newBest ? "🏆" : "⏱️"}</div>
+      <h2>${newBest ? "NEW BEST!" : "Time's up!"}</h2>
+      <p>You scored <b style="color:var(--amber); font-size:24px">${S.speed.score}</b> correct</p>
+      <p>+${S.speed.score * 2} XP earned</p>
+      <div class="speed-best">Best: <b>${S.bestSpeed}</b></div>
+      <button class="btn btn-primary" onclick="speedStart()" style="margin-right:8px">🔄 Again</button>
+      <button class="btn btn-ghost" onclick="speedHome()">Home</button>
+    </div>
+  `;
+}
+
+// ═══════════ CASES ═══════════
+function renderCase() {
+  const c = CASES[S.case.idx];
+  S.case.answered = false;
+  document.getElementById("case-num").textContent = S.case.idx + 1;
+  document.getElementById("case-score").textContent = S.case.score;
+  document.getElementById("case-total").textContent = S.case.total;
+  document.getElementById("case-card").innerHTML = `
+    <div class="case-num">Case ${S.case.idx + 1} of ${CASES.length}</div>
+    <div class="case-scenario">${c.scenario}</div>
+    <div class="case-q">${c.q}</div>
+    ${c.opts.map((o, i) => `<button class="quiz-opt" data-idx="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}
+    <div class="case-explanation" id="case-exp"><b>Why:</b> ${c.explain}</div>
+    <div class="quiz-next" id="case-next-wrap"></div>
+  `;
+  document.querySelectorAll("#case-card .quiz-opt").forEach(b => b.onclick = () => answerCase(b, +b.dataset.idx));
+}
+
+function answerCase(btn, pickedIdx) {
+  if (S.case.answered) return;
+  S.case.answered = true;
+  const c = CASES[S.case.idx];
+  document.querySelectorAll("#case-card .quiz-opt").forEach((b, i) => {
+    b.disabled = true;
+    if (i === c.correct) b.classList.add("correct");
+    else if (i === pickedIdx) b.classList.add("wrong");
+  });
+  S.case.total++;
+  if (pickedIdx === c.correct) {
+    S.case.score++;
+    awardXP(15);
+    if (S.case.score > 0 && S.case.score % 3 === 0) confetti();
+  }
+  document.getElementById("case-score").textContent = S.case.score;
+  document.getElementById("case-total").textContent = S.case.total;
+  document.getElementById("case-exp").classList.add("show");
+  const nextBtn = S.case.idx + 1 < CASES.length
+    ? `<button class="btn btn-primary" onclick="S.case.idx++; renderCase();">Next case →</button>`
+    : `<button class="btn btn-primary" onclick="S.case.idx=0; S.case.score=0; S.case.total=0; renderCase();">🔄 Restart cases</button>`;
+  document.getElementById("case-next-wrap").innerHTML = nextBtn;
+}
+
+// ═══════════ CALCULATOR ═══════════
+function renderCalc() {
+  const w = Math.max(1, parseFloat(document.getElementById("calc-weight").value) || 20);
+  const drugs = ALL_DRUGS.filter(d => d.pedMgPerKg);
+  document.getElementById("calc-results").innerHTML = drugs.map(d => {
+    const dose = d.pedMgPerKg * w;
+    const dailyMax = d.pedsMax && d.pedsMax.includes("mg/kg") ? parseFloat(d.pedsMax) * w : null;
+    const mlPerDose = d.suspConc ? (dose / d.suspConc) : null;
+    const warn = dailyMax && (dose * d.pedFreqPerDay > dailyMax);
+    return `
+      <div class="calc-result">
+        <div style="font-size:28px">${d.emoji}</div>
+        <div style="flex:1">
+          <div class="calc-drug-name">${d.name}</div>
+          <div style="font-size:11px; color:var(--text-3)">${d.peds}</div>
+          ${warn ? `<div class="calc-warn">⚠ Daily total may exceed max (${d.pedsMax})</div>` : ""}
+        </div>
+        <div style="text-align:right">
+          <div class="calc-dose-val">${dose.toFixed(0)} mg</div>
+          ${mlPerDose ? `<div class="calc-dose-unit">or <b>${mlPerDose.toFixed(1)} ml</b> of suspension</div>` : `<div class="calc-dose-unit">per dose</div>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+document.getElementById("calc-weight").addEventListener("input", renderCalc);
+
+// ═══════════ MNEMONICS / TRAPS / ABBREV / PROGRESS ═══════════
+function renderMnem() {
+  document.getElementById("mnem-grid").innerHTML = MNEMONICS.map(m => `
+    <div class="mnem-card">
+      <div class="mnem-hero">${m.hero}</div>
+      <div class="mnem-title">${m.title}</div>
+      <div class="mnem-phrase">${m.phrase}</div>
+      <div class="mnem-body">${m.body}</div>
+    </div>
+  `).join("");
+}
+
+function renderTraps() {
+  document.getElementById("traps-list").innerHTML = TRAPS.map(t => `
+    <div class="trap-card">
+      <div class="trap-title">${t.title}</div>
+      <div class="trap-body">${t.body}</div>
+    </div>
+  `).join("");
+}
+
+function renderAbbrev() {
+  document.getElementById("abbrev-grid").innerHTML = ABBREVS.map(a => `
+    <div class="abbrev-card"><div class="abbrev-term">${a.term}</div><div class="abbrev-def">${a.def}</div></div>
+  `).join("");
+}
+
+function levelFromXP(xp) {
+  const levels = [
+    [0, "Rookie Resident"], [50, "Study Buddy"], [150, "Drug Detective"],
+    [300, "Dosing Apprentice"], [500, "Rx Wizard"], [800, "Pharma Sage"],
+    [1200, "Clinical Master"], [2000, "Boards Legend"]
+  ];
+  let lvl = 1, name = levels[0][1];
+  for (let i = 0; i < levels.length; i++) { if (xp >= levels[i][0]) { lvl = i + 1; name = levels[i][1]; } }
+  return { lvl, name };
+}
+
+function renderProgress() {
+  document.getElementById("prg-streak").textContent = S.streak;
+  document.getElementById("prg-streak-sub").textContent = S.streak > 0 ? `${S.streak} day${S.streak>1?'s':''} going! 🔥` : "Study today to start!";
+  document.getElementById("prg-xp").textContent = S.xp;
+  const { lvl, name } = levelFromXP(S.xp);
+  document.getElementById("prg-level").textContent = `Level ${lvl} — ${name}`;
+  const mastered = Object.values(S.progress).filter(v => v === "known").length;
+  document.getElementById("prg-mastered").textContent = mastered;
+  if (S.quizTotal > 0) {
+    const acc = Math.round(S.quizCorrect / S.quizTotal * 100);
+    document.getElementById("prg-acc").textContent = acc + "%";
+    document.getElementById("prg-acc-sub").textContent = `${S.quizCorrect} of ${S.quizTotal} questions`;
+  }
+  document.getElementById("mastery-grid").innerHTML = ALL_DRUGS.map(d => {
+    const status = S.progress[d.name] || "new";
+    return `<div class="mastery-cell ${status}"><span class="mastery-cell-name">${d.emoji} ${d.name.split(' ')[0]}</span><span class="mastery-dot"></span></div>`;
+  }).join("");
+}
+
+document.getElementById("reset-all").onclick = () => {
+  if (confirm("Reset ALL progress, XP, streak, and best speed score?")) {
+    ["progress","xp","streak","lastActive","quizTotal","quizCorrect","bestSpeed"].forEach(k => localStorage.removeItem("pharma-" + k));
+    location.reload();
+  }
+};
+
+// ═══════════ MODE ROUTING ═══════════
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.onclick = () => {
+    const mode = btn.dataset.mode;
+    S.mode = mode;
+    document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b === btn));
+    document.querySelectorAll(".mode-view").forEach(v => v.classList.toggle("active", v.id === `view-${mode}`));
+    if (mode === "flash" && S.flash.deck.length === 0) initFlash();
+    if (mode === "quiz" && !S.quiz.current) renderQuiz();
+    if (mode === "speed") speedHome();
+    if (mode === "cases") renderCase();
+    if (mode === "calc") renderCalc();
+    if (mode === "progress") renderProgress();
+  };
+});
+
+// ═══════════ SEARCH / FILTER ═══════════
+document.getElementById("search").addEventListener("input", e => { S.searchQ = e.target.value; applyBrowseFilters(); });
+document.querySelectorAll(".chip").forEach(c => {
+  c.onclick = () => {
+    document.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
+    c.classList.add("active");
+    S.filterSec = c.dataset.section;
+    applyBrowseFilters();
+  };
+});
+
+// ═══════════ INIT (defensive — one failure shouldn't kill the page) ═══════════
+function safe(fn, label) { try { fn(); } catch (e) { console.error("[" + label + "]", e); } }
+safe(updateStreak, "updateStreak");
+safe(updateHeaderStats, "updateHeaderStats");
+safe(renderBrowse, "renderBrowse");
+safe(renderMnem, "renderMnem");
+safe(renderTraps, "renderTraps");
+safe(renderAbbrev, "renderAbbrev");
+safe(initFlash, "initFlash");
+safe(renderQuiz, "renderQuiz");
+// Speed / cases / calc / progress render lazily on mode switch
+
+window.addEventListener("error", function(evt) {
+  const msg = (evt.error && evt.error.message) || evt.message || "Unknown error";
+  const banner = document.createElement("div");
+  banner.style.cssText = "position:fixed;bottom:10px;left:10px;right:10px;background:#7a1a2a;color:#fff;padding:12px 16px;border-radius:10px;font:13px -apple-system,sans-serif;z-index:99999;white-space:pre-wrap";
+  banner.textContent = "⚠ " + msg + " @ line " + (evt.lineno || "?");
+  document.body.appendChild(banner);
+});
+
+// Mark that the main script parsed AND ran to completion
+window.__pharmaMainOK = true;
+</script>
+
+<!-- ═══════════ FALLBACK RENDERER (separate script — runs even if main script has a parse error) ═══════════ -->
+<script>
+(function () {
+  // Run after DOM is ready
+  function boot() {
+    setTimeout(function () {
+      if (window.__pharmaMainOK) return; // main script ran, we're fine
+      // Main script failed. Render a minimal fallback.
+      var fallbackData = [
+        {s:"NSAIDs",d:[
+          ["Acetaminophen","325-1000mg q4-6h","10-15mg/kg q4-6h","max 4000mg / 75mg/kg","80,160,325,500,650mg | 160mg/5ml"],
+          ["Ibuprofen","200-400mg q4-6h","4-10mg/kg q6-8h","max 2400mg / 40mg/kg","100,200,400,600mg | 100,200mg/5ml"],
+          ["Aspirin","325-1000mg q4-6h","N/A","max 4000mg","325,500mg"],
+          ["Diflunisal (disc. Canada)","500-1000 LD -> 250-500mg q8-12h","N/A","max 1500mg","250,500mg"],
+          ["Etodolac","200-400mg q6-8h","N/A","max 1000mg","200,300mg"],
+          ["Flurbiprofen","100mg q12h","N/A","-","50,100mg"],
+          ["Ketoprofen","25-50mg q6-8h","N/A","max 300mg","50,100,200mg"],
+          ["Ketorolac","10mg q4-6h","N/A","max 40mg ONLY","10mg"],
+          ["Naproxen","500 LD -> 250mg q6-8h","5-7mg/kg q8-12h","max 1250mg / 1000mg","250,375,500mg | 125mg/5ml"],
+          ["Naproxen Sodium","550 LD -> 275mg q6-8h","N/A","max 1375mg","220,275,550mg"],
+          ["Celecoxib","100-200mg q12-24h (optional 400 LD)","N/A","max 400mg","100,200mg"]
+        ]},
+        {s:"Opioids",d:[
+          ["Codeine","30-60mg q4-6h","N/A","-","15,30mg (ER 50-200) | 5mg/ml"],
+          ["Oxycodone","5-10mg q4-6h","0.1-0.2mg/kg q4-6h","-","5,10,20mg (ER 5-80)"],
+          ["Meperidine (disc. Canada)","50-150mg q4-6h","N/A","-","50mg"],
+          ["Tramadol","50-100mg q4-6h","N/A","max 400mg","50mg (ER 75-400)"],
+          ["APAP + Codeine","300-600 / 15-30mg q4-6h","N/A","max 4000 APAP","T1:300/8, T2:300/15, T3:300/30, T4:300/60"],
+          ["APAP + Oxycodone","325-650 / 5-10mg q4-6h","N/A","max 4000 APAP","325/2.5mg, 325/5mg"],
+          ["Tramacet","325-650 / 37.5-75mg q4-6h","N/A","max 2600/300mg","325/37.5mg"]
+        ]},
+        {s:"Antibiotics",d:[
+          ["Penicillin V","300-600mg qid","6-12mg/kg qid OR 8-16mg/kg tid","-","300mg | 125,300mg/5ml"],
+          ["Amoxicillin","250-500mg tid","7-15mg/kg tid","-","125(chew),250,500mg | 125,250mg/5ml"],
+          ["Amox / Clavulanate","250-500/125mg tid OR 875/125mg bid","7-15mg/kg tid","-","250/125, 500/125, 875/125mg | 125/31.25, 250/62.5mg/5ml"],
+          ["Clindamycin","150-300mg tid-qid","3-7mg/kg tid OR 2-5mg/kg qid","-","150,300mg | 75mg/5ml"],
+          ["Azithromycin","500mg stat -> 250mg qd","10-12mg/kg stat -> 5-6mg/kg qd","-","250,600mg | 100,200mg/5ml"],
+          ["Clarithromycin","250-500mg bid","7.5mg/kg bid","-","250,500mg | 125,250mg/5ml"],
+          ["Erythromycin","250-500mg qid","N/A","-","250mg"],
+          ["Cephalexin","250-500mg tid-qid","12-25mg/kg bid OR 8-17mg/kg tid OR 6-13mg/kg qid","-","250,500mg | 125,250mg/5ml"],
+          ["Doxycycline (infection)","100mg qd-bid OR 200mg qd","N/A","-","100mg"],
+          ["Doxycycline (host-mod)","20mg bid x 3-9 months","N/A","-","20,40mg"],
+          ["Tetracycline","250-500mg qid","N/A","-","250mg"],
+          ["Metronidazole","250-500mg tid (NO alcohol)","N/A","-","250,500mg"]
+        ]},
+        {s:"Antifungals",d:[
+          ["Nystatin","400,000-600,000 units qid (swish & swallow)","N/A","-","susp 100,000 U/ml | cream 100,000 U/g"],
+          ["Fluconazole","100-200mg qd","N/A","-","50,100,200mg"],
+          ["Itraconazole","200mg qd","N/A","-","100mg | 10mg/ml"],
+          ["Ketoconazole","200-400mg qd","N/A","-","200mg"]
+        ]},
+        {s:"Antivirals",d:[
+          ["Acyclovir","400mg 3-5x/day x 5-14 days","15-20mg/kg 3-5x/day x 5-14 days","-","200,400,800mg | 200mg/5ml | 5% cream 5x/day x 4 days"]
+        ]},
+        {s:"Miscellaneous",d:[
+          ["Chlorhexidine Gluconate","Swish 15ml x 30sec AFTER brushing, bid","Same as adult","-","0.12% oral rinse"],
+          ["Diphenhydramine","25-50mg q6-8h","N/A","-","12.5(chew),25,50mg"]
+        ]}
+      ];
+      var grid = document.getElementById("drug-grid");
+      if (!grid) return;
+      var html = '<div style="grid-column:1/-1;padding:16px;background:#4a1010;border:1px solid #7a1a2a;border-radius:10px;color:#ffd0d0;margin-bottom:16px;font-size:13px;line-height:1.5">' +
+        '<b>⚠ Fallback mode</b> — this iPad\'s Safari couldn\'t run the main script (probably an older iOS). ' +
+        'All drug data is below in plain form. Flashcards / quiz / cases are disabled on this device. ' +
+        'Try updating iOS, or viewing on a newer browser for the full experience.' +
+        '</div>';
+      fallbackData.forEach(function(sec) {
+        html += '<div style="grid-column:1/-1;margin-top:20px;padding:10px 14px;background:#1a2033;border-radius:10px;font-weight:700;color:#fbbf24;font-size:14px">' + sec.s + '</div>';
+        sec.d.forEach(function(row) {
+          html += '<div style="background:#131826;border:1px solid #2a3148;border-radius:12px;padding:14px 16px">' +
+            '<div style="font-weight:700;font-size:15px;color:#f0f2fa;margin-bottom:8px">' + row[0] + '</div>' +
+            '<div style="font-size:12px;color:#b8c0d9;line-height:1.7">' +
+              '<b style="color:#7a8199">Adult:</b> ' + row[1] + '<br>' +
+              '<b style="color:#7a8199">Peds:</b> ' + row[2] + '<br>' +
+              '<b style="color:#7a8199">Max:</b> ' + row[3] + '<br>' +
+              '<b style="color:#7a8199">Available:</b> ' + row[4] +
+            '</div>' +
+          '</div>';
+        });
+      });
+      grid.innerHTML = html;
+      // hide the fancy modes the fallback can't support
+      var modesEl = document.getElementById("modes");
+      if (modesEl) modesEl.style.display = "none";
+    }, 300);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+
+</body>
+</html>
